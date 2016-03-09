@@ -4,8 +4,16 @@ Python script to generate a directory of shape files based on p-codes.
 Use this script together with the _shp2geojson_ tool from the [GDAL](http://www.gdal.org/) library to convert an ArcGIS shapefile to a directory of individual files that a browser-side script (or similar) can download on demand, from directories named after p-codes (geographical codes).  Example:
 
 ```
-shp2geojson myshapefile-shp.zip | python make-pcodes.py -c NPL -p REG_CODE -d /var/share/p-codes
+shp2geojson myshapefile-shp.zip | python make-pcodes.py -c NPL -p REG_CODE -d /var/share/www/p-codes
 ```
+
+The result will be a directory structure like this:
+
+/var/share/www/p-codes/NPL/
+/var/share/www/p-codes/NPL/524 1/
+/var/share/www/p-codes/NPL/524 1/shape.json
+
+A client simply needs to know how to construct the URL to download a GeoJSON boundary for a p-code, for use with [Leaflet](http://leafletjs.com/) or similar tools.
 
 # Usage
 
