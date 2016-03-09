@@ -10,7 +10,9 @@ shp2geojson myshapefile-shp.zip | python make-pcodes.py -c NPL -p REG_CODE -d /v
 The result will be a directory structure like this:
 
 /var/share/www/p-codes/NPL/
+
 /var/share/www/p-codes/NPL/524 1/
+
 /var/share/www/p-codes/NPL/524 1/shape.json
 
 A client simply needs to know how to construct the URL to download a GeoJSON boundary for a p-code, for use with [Leaflet](http://leafletjs.com/) or similar tools.
