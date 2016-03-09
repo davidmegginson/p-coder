@@ -1,21 +1,48 @@
-import sys
-import os
-import json
+"""Generate a directory of GeoJSON files named after p-codes
+"""
 
-root_dir = '/home/david/p-codes'
-country_code_property = 'CNTRY_CODE'
-adm_code_property = 'ADMIN3_PCO'
+import sys, os, json, argparse
 
-geodata = json.load(sys.stdin)
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    'input',
+    type=argparse.FileType('r'),
+    metavar="geojson_file",
+    nargs='?',
+    default=sys.stdin,
+    help="GeoJSON file containing the boundaries and p-codes."
+)
+parser.add_argument(
+    '-d', '--output-dir',
+    default=".",
+    metavar="dir",
+    help="Root of the output directory."
+)
+parser.add_argument(
+    '-c',
+    '--country',
+    required=True,
+    metavar="country_code",
+    help="ISO 3166-1 alpha3 country code for the shapes."
+)
+parser.add_argument(
+    '-p',
+    '--property',
+    required=True,
+    metavar="adm_prop",
+    help="Property name for the ADM code in the GeoJSON."
+)
+args = parser.parse_args()
+
+geodata = json.load(args.input)
 
 for feature in geodata['features']:
     if feature.get('type') == 'Feature':
         properties = feature.get('properties')
-        #country_code = properties.get(country_code_property)
-        country_code = 'MLI'
-        adm_code = properties.get(adm_code_property)
+        adm_code = properties.get(args.property)
+        print("Dumping {}".format(adm_code))
         # FIXME - make codes safe
-        path = '{}/{}/{}'.format(root_dir, country_code, adm_code)
+        path = '{}/{}/{}'.format(args.output_dir, args.country, adm_code)
         if not os.path.exists(path):
             os.makedirs(path)
         filename = '{}/shape.json'.format(path)
